@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { fetchCharactersByUrl, pickCharacters } from "../api/characters";
 
 const EpisodePage = () => {
   const { id } = useParams();
@@ -9,13 +10,8 @@ const EpisodePage = () => {
     const fetchEpisode = async () => {
       const response = await fetch(`https://rickandmortyapi.com/api/episode/${id}`);
       const data = await response.json();
-      const charactersWithNames = await Promise.all(
-        data.characters.map(async (url) => {
-          const res = await fetch(url);
-          const character = await res.json();
-          return { id: character.id, name: character.name };
-        })
-      );
+      const charactersById = await fetchCharactersByUrl(data.characters);
+      const charactersWithNames = pickCharacters(data.characters, charactersById);
       setEpisode({ ...data, characters: charactersWithNames });
     };
 

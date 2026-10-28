@@ -12,6 +12,9 @@ Práctica de React
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=eslint&logoColor=white)
 
+[**Ver demo**](https://albertocalerocastillo.github.io/Rick-y-Morty-APP/)
+
+<img src="docs/captura.jpg" alt="Listado de episodios con sus personajes" width="85%">
 
 </div>
 
@@ -25,14 +28,14 @@ Una aplicación de una sola página que consume [The Rick and Morty API](https:/
 - **Ficha de episodio** (`/episode/:id`): nombre, fecha de estreno, código del episodio (por ejemplo `S01E01`) y lista de personajes.
 - **Ficha de personaje** (`/character/:id`): imagen, especie, género, origen y lista de episodios en los que aparece.
 - **Navegación cruzada** entre episodios y personajes con React Router, y enlace de vuelta al listado desde cada ficha.
-- **Carga de datos en paralelo**: las peticiones de personajes de cada episodio se lanzan a la vez con `Promise.all` y la vista se pinta cuando todas han terminado.
+- **Carga de datos agrupada**: los personajes de todos los episodios de la página se piden en una sola llamada a `/character/1,2,3…` (`src/api/characters.js`), en lugar de una petición por personaje.
 
 ## Stack
 
 | Capa | Tecnología |
 | --- | --- |
 | Interfaz | React 18 (componentes funcionales, `useState`, `useEffect`) |
-| Rutas | React Router 7 (`BrowserRouter`, `Routes`, `useParams`, `Link`) |
+| Rutas | React Router 7 (`HashRouter`, `Routes`, `useParams`, `Link`) |
 | Datos | `fetch` con `async/await` contra The Rick and Morty API |
 | Herramientas | Vite 6 y ESLint 9 |
 | Estilos | CSS plano (`App.css`, `index.css`) |
@@ -78,8 +81,8 @@ No hace falta ninguna clave: la API de Rick and Morty es pública.
 
 - A separar una app de React en páginas y conectarlas con rutas dinámicas que leen el `id` de la URL.
 - A pedir datos en `useEffect` y volver a pedirlos cuando cambia una dependencia, como la página actual o el `id`.
-- A resolver muchas peticiones a la vez con `Promise.all` en lugar de encadenarlas una a una.
-- Que una petición por personaje sale cara: el siguiente paso sería agrupar los ids en una sola llamada a `/character/1,2,3`.
+- Que una petición por personaje sale cara: la API corta con 429 (demasiadas peticiones), así que agrupé los ids en una sola llamada a `/character/1,2,3`.
+- A publicar una SPA en GitHub Pages: `base` de Vite, `HashRouter` para que recargar no dé 404 y despliegue con GitHub Actions.
 
 ---
 

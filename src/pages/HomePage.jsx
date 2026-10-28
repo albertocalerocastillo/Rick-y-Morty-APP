@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { fetchCharactersByUrl, pickCharacters } from "../api/characters";
 
 const HomePage = () => {
   const [episodes, setEpisodes] = useState([]);
@@ -12,19 +13,14 @@ const HomePage = () => {
       const response = await fetch(`https://rickandmortyapi.com/api/episode?page=${currentPage}`);
       const data = await response.json();
 
-      const updatedEpisodes = await Promise.all(
-        data.results.map(async (episode) => {
-            //Esperamos a obtener toda la información antes de continuar, que se resuelvan todas las solicitudes a la API
-          const characters = await Promise.all(
-            episode.characters.map(async (url) => {
-              const res = await fetch(url);
-              const character = await res.json();
-              return { id: character.id, name: character.name };
-            })
-          );
-          return { ...episode, characters };
-        })
+      // Todos los personajes de la página en una sola petición
+      const charactersById = await fetchCharactersByUrl(
+        data.results.flatMap((episode) => episode.characters)
       );
+      const updatedEpisodes = data.results.map((episode) => ({
+        ...episode,
+        characters: pickCharacters(episode.characters, charactersById),
+      }));
 
       setEpisodes(updatedEpisodes);
       setPageInfo(data.info);

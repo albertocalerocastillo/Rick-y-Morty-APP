@@ -1,5 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// HashRouter: GitHub Pages no sabe redirigir /character/1 a index.html y daría 404 al recargar
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import CharacterPage from "./pages/CharacterPage";
 import EpisodePage from "./pages/EpisodePage";
